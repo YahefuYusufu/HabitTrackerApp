@@ -1,121 +1,172 @@
-import React from "react"
+import React, { useState } from "react"
 import {
-	Box,
+	View,
 	Text,
-	Heading,
-	VStack,
-	FormControl,
-	Input,
-	Button,
-	HStack,
-	Center,
-	Icon,
-	IconButton,
-	Link,
-} from "native-base"
-import { MaterialIcons } from "@expo/vector-icons"
+	TextInput,
+	TouchableOpacity,
+	StyleSheet,
+	KeyboardAvoidingView,
+	Platform,
+	ScrollView,
+} from "react-native"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import { AuthStackParamList } from "src/types/navigation"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { AuthStackParamList } from "../../types/navigation"
-import { useAuth } from "../../hooks/useAuth"
-import { useState } from "react"
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Login">
 
 export const LoginScreen = ({ navigation }: Props) => {
-	const { login, isLoading, error } = useAuth()
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	})
 	const [showPassword, setShowPassword] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	const handleLogin = () => {
-		login({ email: formData.email, password: formData.password })
+		setIsLoading(true)
+		// Add login logic here
 	}
 
 	return (
-		<Center flex={1} px={4}>
-			<Box safeArea w="100%" maxW="290">
-				<Heading size="lg" fontWeight="600" color="coolGray.800">
-					Welcome Back
-				</Heading>
-				<Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
-					Sign in to continue!
-				</Heading>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			style={styles.container}>
+			<ScrollView contentContainerStyle={styles.scrollContainer}>
+				<View style={styles.formContainer}>
+					<Text style={styles.title}>Welcome Back</Text>
+					<Text style={styles.subtitle}>Sign in to continue!</Text>
 
-				<VStack space={3} mt="5">
-					{error && <Text color="red.500">{error}</Text>}
-
-					<FormControl>
-						<FormControl.Label>Email</FormControl.Label>
-						<Input
-							InputLeftElement={
-								<Icon
-									as={<MaterialIcons name="person" />}
-									size={5}
-									ml="2"
-									color="muted.400"
-								/>
-							}
+					<View style={styles.inputContainer}>
+						<MaterialIcons name="person" size={20} color="#666" />
+						<TextInput
+							style={styles.input}
+							placeholder="email@example.com"
 							value={formData.email}
 							onChangeText={(value) =>
 								setFormData((prev) => ({ ...prev, email: value }))
 							}
-							placeholder="email@example.com"
+							keyboardType="email-address"
+							autoCapitalize="none"
 						/>
-					</FormControl>
+					</View>
 
-					<FormControl>
-						<FormControl.Label>Password</FormControl.Label>
-						<Input
-							type={showPassword ? "text" : "password"}
-							InputRightElement={
-								<IconButton
-									icon={
-										<Icon
-											as={
-												<MaterialIcons
-													name={showPassword ? "visibility" : "visibility-off"}
-												/>
-											}
-											size={5}
-											mr="2"
-											color="muted.400"
-										/>
-									}
-									onPress={() => setShowPassword(!showPassword)}
-								/>
-							}
+					<View style={styles.inputContainer}>
+						<TextInput
+							style={styles.input}
+							placeholder="Password"
 							value={formData.password}
 							onChangeText={(value) =>
 								setFormData((prev) => ({ ...prev, password: value }))
 							}
-							placeholder="Password"
+							secureTextEntry={!showPassword}
 						/>
-					</FormControl>
+						<TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+							<MaterialIcons
+								name={showPassword ? "visibility" : "visibility-off"}
+								size={20}
+								color="#666"
+							/>
+						</TouchableOpacity>
+					</View>
 
-					<Button
-						isLoading={isLoading}
+					<TouchableOpacity
+						style={styles.button}
 						onPress={handleLogin}
-						mt="2"
-						colorScheme="primary">
-						Sign in
-					</Button>
-
-					<HStack mt="6" justifyContent="center">
-						<Text fontSize="sm" color="coolGray.600">
-							New user?{" "}
+						disabled={isLoading}>
+						<Text style={styles.buttonText}>
+							{isLoading ? "Signing in..." : "Sign in"}
 						</Text>
-						<Link onPress={() => navigation.navigate("Signup")}>Sign up</Link>
-					</HStack>
+					</TouchableOpacity>
 
-					<Link
+					<View style={styles.footer}>
+						<Text style={styles.footerText}>New user? </Text>
+						<TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+							<Text style={styles.link}>Sign up</Text>
+						</TouchableOpacity>
+					</View>
+
+					<TouchableOpacity
 						onPress={() => navigation.navigate("ForgotPassword")}
-						alignSelf="center">
-						Forgot Password?
-					</Link>
-				</VStack>
-			</Box>
-		</Center>
+						style={styles.forgotPassword}>
+						<Text style={styles.link}>Forgot Password?</Text>
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
+		</KeyboardAvoidingView>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+	},
+	scrollContainer: {
+		flexGrow: 1,
+		justifyContent: "center",
+		padding: 20,
+	},
+	formContainer: {
+		width: "100%",
+		maxWidth: 400,
+		alignSelf: "center",
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: "600",
+		color: "#1a1a1a",
+		marginBottom: 8,
+	},
+	subtitle: {
+		fontSize: 14,
+		color: "#666",
+		marginBottom: 24,
+	},
+	inputContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: "#ddd",
+		borderRadius: 8,
+		paddingHorizontal: 12,
+		marginBottom: 16,
+		height: 48,
+	},
+	input: {
+		flex: 1,
+		marginLeft: 8,
+		fontSize: 16,
+	},
+	button: {
+		backgroundColor: "#007AFF",
+		borderRadius: 8,
+		height: 48,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 8,
+	},
+	buttonText: {
+		color: "#fff",
+		fontSize: 16,
+		fontWeight: "600",
+	},
+	footer: {
+		flexDirection: "row",
+		justifyContent: "center",
+		marginTop: 24,
+	},
+	footerText: {
+		color: "#666",
+		fontSize: 14,
+	},
+	link: {
+		color: "#007AFF",
+		fontSize: 14,
+		fontWeight: "500",
+	},
+	forgotPassword: {
+		alignSelf: "center",
+		marginTop: 12,
+	},
+})

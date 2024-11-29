@@ -1,21 +1,15 @@
 import React from "react"
 import { NavigationContainer } from "@react-navigation/native"
-import { NativeBaseProvider, extendTheme } from "native-base"
 import AuthNavigator from "src/app/Navigator/AuthNavigator"
-
-// Optional: Create custom theme
-const theme = extendTheme({
-	config: {
-		initialColorMode: "dark",
-	},
-})
+import { TamaguiProvider } from "tamagui"
+import config from "tamagui.config"
 
 export default function App() {
 	return (
-		<NativeBaseProvider theme={theme}>
+		<TamaguiProvider config={config}>
 			<NavigationContainer>
 				<AuthNavigator />
 			</NavigationContainer>
-		</NativeBaseProvider>
+		</TamaguiProvider>
 	)
 }
