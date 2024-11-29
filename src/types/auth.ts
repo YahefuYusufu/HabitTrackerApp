@@ -22,6 +22,12 @@ export interface LoginFormData {
 	password: string
 }
 
+export interface SignupData {
+	email: string
+	password: string
+	name: string
+}
+
 export interface SignupFormData extends LoginFormData {
 	name: string
 	confirmPassword: string

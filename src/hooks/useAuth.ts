@@ -1,11 +1,12 @@
 // src/hooks/useAuth.ts
+import { LoginFormData, SignupData } from "src/types/auth"
 import { useAuthStore } from "../store/authStore"
 
 export const useAuth = () => {
 	const { user, isLoading, error, setUser, setLoading, setError, reset } =
 		useAuthStore()
 
-	const login = async (email: string, password: string) => {
+	const login = async ({ email, password }: LoginFormData) => {
 		setLoading(true)
 		try {
 			// Firebase logic will go here later
@@ -18,7 +19,7 @@ export const useAuth = () => {
 		}
 	}
 
-	const signup = async (email: string, password: string, name: string) => {
+	const signup = async ({ email, password, name }: SignupData) => {
 		setLoading(true)
 		try {
 			// Firebase logic will go here later
