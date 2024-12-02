@@ -1,5 +1,5 @@
 // src/hooks/useAuth.ts
-import { LoginFormData, SignupData } from "src/types/auth"
+import { LoginFormData, SignupData } from "../types/auth"
 import { useAuthStore } from "../store/authStore"
 
 export const useAuth = () => {

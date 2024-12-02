@@ -4,6 +4,9 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"baseUrl": "./"
+		"baseUrl": ".",
+		"paths": {
+			"*": ["src/*"]
+		}
 	}
 }

@@ -5,14 +5,13 @@ import {
 	SignupScreen,
 	ForgotPasswordScreen,
 } from "../../screens/auth"
-import { AuthStackParamList } from "src/types/navigation"
+import { AuthStackParamList } from "../../types/navigation"
 
 const Stack = createNativeStackNavigator<AuthStackParamList>()
 
 const AuthNavigator = () => {
 	return (
 		<Stack.Navigator
-			initialRouteName="Login"
 			screenOptions={{
 				headerShown: false,
 				contentStyle: { backgroundColor: "white" },

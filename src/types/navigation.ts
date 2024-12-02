@@ -1,3 +1,8 @@
+export type RootStackParamList = {
+	Auth: undefined
+	TabNavigator: undefined
+}
+
 export type AuthStackParamList = {
 	Login: undefined
 	Signup: undefined
