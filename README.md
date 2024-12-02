@@ -14,11 +14,11 @@ A mobile application built with React Native (Expo) to help users track their da
 ## Tech Stack
 
 - **Frontend**: React Native (Expo)
-- **UI Library**: Native Base
+- **UI **: StyleSheet
 - **Backend**: Firebase
 - **Authentication**: Firebase Auth
 - **Database**: Firestore
-- **State Management**: React Context/Hooks
+- **State Management**: Redux/zustand
 - **Language**: TypeScript
 
 ## Prerequisites
