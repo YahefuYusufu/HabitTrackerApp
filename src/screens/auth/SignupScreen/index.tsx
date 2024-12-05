@@ -7,6 +7,7 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 	Alert,
+	ScrollView,
 } from "react-native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AuthStackParamList } from "../../../types/navigation"
@@ -47,25 +48,31 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 		<Animated.View entering={FadeIn} exiting={FadeOut} style={styles.container}>
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				style={styles.container}>
-				<Animated.View
-					entering={SlideInRight.delay(300)}
-					style={styles.content}>
-					<Text style={styles.title}>Create Account</Text>
-					<Text style={styles.subtitle}>
-						Start your journey to better habits
-					</Text>
+				style={styles.container}
+				keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}>
+				<ScrollView
+					contentContainerStyle={styles.scrollContent}
+					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps="handled">
+					<Animated.View
+						entering={SlideInRight.delay(300)}
+						style={styles.content}>
+						<Text style={styles.title}>Create Account</Text>
+						<Text style={styles.subtitle}>
+							Start your journey to better habits
+						</Text>
 
-					<SignupForm onSubmit={handleSignup} isLoading={isLoading} />
+						<SignupForm onSubmit={handleSignup} isLoading={isLoading} />
 
-					<TouchableOpacity
-						onPress={() => navigation.navigate("Login")}
-						style={styles.loginContainer}
-						disabled={isLoading}>
-						<Text style={styles.loginText}>Already have an account? </Text>
-						<Text style={styles.loginLink}>Login</Text>
-					</TouchableOpacity>
-				</Animated.View>
+						<TouchableOpacity
+							onPress={() => navigation.navigate("Login")}
+							style={styles.loginContainer}
+							disabled={isLoading}>
+							<Text style={styles.loginText}>Already have an account? </Text>
+							<Text style={styles.loginLink}>Login</Text>
+						</TouchableOpacity>
+					</Animated.View>
+				</ScrollView>
 			</KeyboardAvoidingView>
 		</Animated.View>
 	)

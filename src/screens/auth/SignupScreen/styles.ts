@@ -8,8 +8,15 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: colors.background,
 	},
+	scrollContent: {
+		flexGrow: 1,
+		justifyContent: "center",
+		paddingHorizontal: 16,
+		paddingBottom: 24, // Add some bottom padding
+	},
 	content: {
 		flex: 1,
+		paddingTop: 50,
 		padding: isSmallDevice ? spacing.md : spacing.lg,
 		justifyContent: "center",
 	},

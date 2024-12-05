@@ -33,7 +33,7 @@ export const validateFullName = (name: string) => {
 
 	return {
 		minLength: name.length >= 2,
-		maxLength: name.length <= 50,
+		maxLength: name.length >= 2 && name.length <= 50,
 	}
 }
 
