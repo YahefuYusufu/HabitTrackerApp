@@ -1,4 +1,3 @@
-// src/screens/auth/types.ts
 import { z } from "zod"
 
 export const loginSchema = z.object({

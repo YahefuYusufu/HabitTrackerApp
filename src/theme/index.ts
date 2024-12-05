@@ -16,6 +16,8 @@ export const colors = {
 	error: "#FF3B30",
 	success: "#34C759",
 	border: "#E5E5EA",
+	gray: "#94A3B8",
+	cardBackground: "#F8FAFC",
 } as const
 
 export const typography = {

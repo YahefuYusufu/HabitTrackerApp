@@ -1,5 +1,4 @@
-// src/screens/auth/LoginScreen/components/LoginForm.tsx
-import React from "react"
+import React, { useState } from "react"
 import {
 	View,
 	TextInput,
@@ -12,6 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, LoginFormData } from "../../types"
 import { styles } from "../styles"
 import { colors } from "theme"
+import { ValidationContainer } from "../../../../components/common/ValidationContainer"
+import { ValidationRequirement } from "../../../../components/common/ValidationRequirement"
+import { validateEmail, validatePassword } from "../../../../utils/validation"
 
 type LoginFormProps = {
 	onSubmit: (data: LoginFormData) => void
@@ -24,13 +26,22 @@ export const LoginForm = ({
 	onForgotPassword,
 	isLoading,
 }: LoginFormProps) => {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<LoginFormData>({
+	const [showEmailRequirements, setShowEmailRequirements] = useState(false)
+	const [showPasswordRequirements, setShowPasswordRequirements] =
+		useState(false)
+
+	const { control, handleSubmit, watch } = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
 	})
+
+	const watchEmail = watch("email", "")
+	const watchPassword = watch("password", "")
+
+	const emailRequirements = validateEmail(watchEmail)
+	const passwordRequirements = validatePassword(watchPassword)
+
+	const isEmailValid = Object.values(emailRequirements).every(Boolean)
+	const isPasswordValid = Object.values(passwordRequirements).every(Boolean)
 
 	return (
 		<View style={styles.form}>
@@ -38,20 +49,40 @@ export const LoginForm = ({
 				control={control}
 				name="email"
 				render={({ field: { onChange, value } }) => (
-					<>
+					<View>
 						<TextInput
 							placeholder="Email"
-							style={[styles.input, errors.email && styles.inputError]}
+							style={[
+								styles.input,
+								isEmailValid &&
+									value && {
+										borderColor: colors.success || "#22C55E",
+										borderWidth: 1.5,
+									},
+							]}
 							keyboardType="email-address"
 							autoCapitalize="none"
 							onChangeText={onChange}
 							value={value}
 							editable={!isLoading}
+							onFocus={() => setShowEmailRequirements(true)}
+							onBlur={() => setShowEmailRequirements(false)}
 						/>
-						{errors.email && (
-							<Text style={styles.errorText}>{errors.email.message}</Text>
+						{showEmailRequirements && (
+							<ValidationContainer>
+								<ValidationRequirement
+									text="Valid email format"
+									isMet={emailRequirements.isEmail}
+									delay={100}
+								/>
+								<ValidationRequirement
+									text="Email is not empty"
+									isMet={emailRequirements.notEmpty}
+									delay={200}
+								/>
+							</ValidationContainer>
 						)}
-					</>
+					</View>
 				)}
 			/>
 
@@ -59,19 +90,49 @@ export const LoginForm = ({
 				control={control}
 				name="password"
 				render={({ field: { onChange, value } }) => (
-					<>
+					<View>
 						<TextInput
 							placeholder="Password"
-							style={[styles.input, errors.password && styles.inputError]}
+							style={[
+								styles.input,
+								isPasswordValid &&
+									value && {
+										borderColor: colors.success || "#22C55E",
+										borderWidth: 1.5,
+									},
+							]}
 							secureTextEntry
 							onChangeText={onChange}
 							value={value}
 							editable={!isLoading}
+							onFocus={() => setShowPasswordRequirements(true)}
+							onBlur={() => setShowPasswordRequirements(false)}
 						/>
-						{errors.password && (
-							<Text style={styles.errorText}>{errors.password.message}</Text>
+						{showPasswordRequirements && (
+							<ValidationContainer>
+								<ValidationRequirement
+									text="At least 8 characters"
+									isMet={passwordRequirements.minLength}
+									delay={100}
+								/>
+								<ValidationRequirement
+									text="At least one uppercase letter"
+									isMet={passwordRequirements.hasUppercase}
+									delay={200}
+								/>
+								<ValidationRequirement
+									text="At least one special character"
+									isMet={passwordRequirements.hasSpecialChar}
+									delay={300}
+								/>
+								<ValidationRequirement
+									text="At least one number"
+									isMet={passwordRequirements.hasNumber}
+									delay={400}
+								/>
+							</ValidationContainer>
 						)}
-					</>
+					</View>
 				)}
 			/>
 

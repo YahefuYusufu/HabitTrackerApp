@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border,
 		borderRadius: 8,
-		marginBottom: spacing.md,
+		marginBottom: spacing.sm,
 		paddingHorizontal: spacing.md,
 		backgroundColor: "white",
 	},
