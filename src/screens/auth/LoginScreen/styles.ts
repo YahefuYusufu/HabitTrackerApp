@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
 	},
 	content: {
 		flex: 1,
+		paddingTop: 50,
 		padding: isSmallDevice ? spacing.md : spacing.lg,
 		justifyContent: "center",
 	},
