@@ -1,5 +1,5 @@
 // src/screens/auth/ForgotPasswordScreen/components/ForgotPasswordForm.tsx
-import React from "react"
+import React, { useState } from "react"
 import {
 	View,
 	TextInput,
@@ -11,6 +11,10 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { forgotPasswordSchema, ForgotPasswordFormData } from "../../types"
 import { styles } from "../styles"
+import { colors } from "theme"
+import { ValidationContainer } from "../../../../components/common/ValidationContainer"
+import { ValidationRequirement } from "../../../../components/common/ValidationRequirement"
+import { validateEmail } from "../../../../utils/validation"
 
 type ForgotPasswordFormProps = {
 	onSubmit: (data: ForgotPasswordFormData) => void
@@ -21,13 +25,15 @@ export const ForgotPasswordForm = ({
 	onSubmit,
 	isLoading,
 }: ForgotPasswordFormProps) => {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<ForgotPasswordFormData>({
+	const [showEmailRequirements, setShowEmailRequirements] = useState(false)
+
+	const { control, handleSubmit, watch } = useForm<ForgotPasswordFormData>({
 		resolver: zodResolver(forgotPasswordSchema),
 	})
+
+	const watchEmail = watch("email", "")
+	const emailRequirements = validateEmail(watchEmail)
+	const isEmailValid = Object.values(emailRequirements).every(Boolean)
 
 	return (
 		<View style={styles.form}>
@@ -35,20 +41,40 @@ export const ForgotPasswordForm = ({
 				control={control}
 				name="email"
 				render={({ field: { onChange, value } }) => (
-					<>
+					<View>
 						<TextInput
 							placeholder="Email"
-							style={[styles.input, errors.email && styles.inputError]}
+							style={[
+								styles.input,
+								isEmailValid &&
+									value && {
+										borderColor: colors.success || "#22C55E",
+										borderWidth: 1.5,
+									},
+							]}
 							keyboardType="email-address"
 							autoCapitalize="none"
 							onChangeText={onChange}
 							value={value}
 							editable={!isLoading}
+							onFocus={() => setShowEmailRequirements(true)}
+							onBlur={() => setShowEmailRequirements(false)}
 						/>
-						{errors.email && (
-							<Text style={styles.errorText}>{errors.email.message}</Text>
+						{showEmailRequirements && (
+							<ValidationContainer>
+								<ValidationRequirement
+									text="Valid email format"
+									isMet={emailRequirements.isEmail}
+									delay={100}
+								/>
+								<ValidationRequirement
+									text="Email is not empty"
+									isMet={emailRequirements.notEmpty}
+									delay={200}
+								/>
+							</ValidationContainer>
 						)}
-					</>
+					</View>
 				)}
 			/>
 

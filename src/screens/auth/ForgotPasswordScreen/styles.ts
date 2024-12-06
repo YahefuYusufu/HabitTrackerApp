@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
 	},
 	form: {
 		width: "100%",
+		gap: spacing.sm,
 	},
 	input: {
 		width: "100%",
@@ -70,5 +71,10 @@ export const styles = StyleSheet.create({
 		color: colors.primary,
 		fontSize: 16,
 		fontWeight: "600",
+	},
+
+	inputSuccess: {
+		borderColor: colors.success,
+		borderWidth: 1.5,
 	},
 })

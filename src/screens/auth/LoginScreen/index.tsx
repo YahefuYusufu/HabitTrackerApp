@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AuthStackParamList } from "../../../types/navigation"
 import { LoginForm } from "./components/LoginForm"
 import { styles } from "./styles"
-import { LoginFormData } from "../types"
+import { LoginFormData } from "@screens/auth/types"
 import Animated, { FadeIn, FadeOut, SlideInDown } from "react-native-reanimated"
 
 type LoginScreenProps = {

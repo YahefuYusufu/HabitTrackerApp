@@ -6,7 +6,17 @@
 		"skipLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"*": ["src/*"]
+			"@app/*": ["src/app/*"],
+			"@components/*": ["src/components/*"],
+			"@constants/*": ["src/constants/*"],
+			"@hooks/*": ["src/hooks/*"],
+			"@screens/*": ["src/screens/*"],
+			"@services/*": ["src/services/*"],
+			"@store/*": ["src/store/*"],
+			"@styles/*": ["src/styles/*"],
+			"@theme/*": ["src/theme/*"],
+			"@types/*": ["src/types/*"],
+			"@utils/*": ["src/utils/*"]
 		}
 	}
 }

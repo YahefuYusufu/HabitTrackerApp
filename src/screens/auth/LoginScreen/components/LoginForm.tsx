@@ -10,10 +10,10 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, LoginFormData } from "../../types"
 import { styles } from "../styles"
-import { colors } from "theme"
-import { ValidationContainer } from "../../../../components/common/ValidationContainer"
-import { ValidationRequirement } from "../../../../components/common/ValidationRequirement"
-import { validateEmail, validatePassword } from "../../../../utils/validation"
+import { colors } from "@theme/index"
+import { ValidationContainer } from "@components/common/ValidationContainer"
+import { ValidationRequirement } from "@components/common/ValidationRequirement"
+import { validateEmail, validatePassword } from "@utils/validation"
 
 type LoginFormProps = {
 	onSubmit: (data: LoginFormData) => void
