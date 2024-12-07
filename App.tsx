@@ -1,12 +1,16 @@
 import React from "react"
-import { RootNavigator } from "@navigator/RootNavigator"
+import { RootNavigator } from "./src/navigator/RootNavigator"
 import { PaperProvider } from "react-native-paper"
-import { theme } from "@theme/index"
+import { theme } from "./src/theme"
+import { Provider } from "react-redux"
+import { store } from "./src/store/store"
 
 export default function App() {
 	return (
-		<PaperProvider theme={theme}>
-			<RootNavigator />
-		</PaperProvider>
+		<Provider store={store}>
+			<PaperProvider theme={theme}>
+				<RootNavigator />
+			</PaperProvider>
+		</Provider>
 	)
 }

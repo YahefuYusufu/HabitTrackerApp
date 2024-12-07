@@ -22,10 +22,10 @@ export interface LoginFormData {
 	password: string
 }
 
-export interface SignupData {
+export interface SignupFormData {
 	email: string
 	password: string
-	name: string
+	fullName: string
 }
 
 export interface SignupFormData extends LoginFormData {

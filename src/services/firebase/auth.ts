@@ -1,56 +1,28 @@
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	sendPasswordResetEmail,
-	signOut,
-	type User,
-} from "firebase/auth"
-import { auth } from "./config"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { auth, db } from "./config"
 
 export const firebaseAuth = {
-	// Sign up
-	async signUp(email: string, password: string): Promise<User> {
+	async signUp(email: string, password: string, fullName: string) {
 		try {
+			// First create the auth user
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				email,
 				password
 			)
-			return userCredential.user
-		} catch (error: any) {
-			throw new Error(error.message)
-		}
-	},
 
-	// Sign in
-	async signIn(email: string, password: string): Promise<User> {
-		try {
-			const userCredential = await signInWithEmailAndPassword(
-				auth,
+			// Then create a user profile document in Firestore
+			await setDoc(doc(db, "users", userCredential.user.uid), {
+				fullName,
 				email,
-				password
-			)
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+			})
+
 			return userCredential.user
 		} catch (error: any) {
-			throw new Error(error.message)
-		}
-	},
-
-	// Reset password
-	async resetPassword(email: string): Promise<void> {
-		try {
-			await sendPasswordResetEmail(auth, email)
-		} catch (error: any) {
-			throw new Error(error.message)
-		}
-	},
-
-	// Sign out
-	async signOut(): Promise<void> {
-		try {
-			await signOut(auth)
-		} catch (error: any) {
-			throw new Error(error.message)
+			throw error
 		}
 	},
 }

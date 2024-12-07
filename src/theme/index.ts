@@ -1,5 +1,5 @@
 // src/theme/index.ts
-import { MD3LightTheme } from "react-native-paper"
+import { MD3LightTheme, type MD3Theme } from "react-native-paper"
 
 export const theme = {
 	...MD3LightTheme,
@@ -31,7 +31,9 @@ export const theme = {
 	animation: {
 		scale: 1.0,
 	},
-	mode: "exact",
+
+	// Ensure mode is correct
+	mode: "exact" as const,
 	elevation: {
 		level0: {
 			shadowColor: "transparent",

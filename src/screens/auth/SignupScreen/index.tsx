@@ -30,14 +30,14 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 	const handleSignup = async (data: SignupFormData) => {
 		try {
 			setIsLoading(true)
-			await firebaseAuth.signUp(data.email, data.password)
-			Alert.alert("Success", "Account created successfully!")
-			navigation.navigate("Login")
-		} catch (error: any) {
-			Alert.alert(
-				"Error",
-				error instanceof Error ? error.message : "Failed to sign up"
-			)
+			await firebaseAuth.signUp(data.email, data.password, data.fullName)
+			Alert.alert("Success", "Account created successfully!", [
+				{ text: "OK", onPress: () => navigation.navigate("Login") },
+			])
+		} catch (error: unknown) {
+			const errorMessage =
+				error instanceof Error ? error.message : "An unknown error occurred"
+			Alert.alert("Error", errorMessage)
 		} finally {
 			setIsLoading(false)
 		}

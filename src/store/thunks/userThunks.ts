@@ -1,25 +1,17 @@
+// src/store/thunks/userThunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import {
-	setLoading,
-	setError,
-	setProfile,
-	setSettings,
-} from "../slices/userSlice"
-import { auth, db } from "@services/firebase/config"
-import { doc, getDoc, updateDoc } from "firebase/firestore"
+import { userService } from "../../services/firebase/user"
+import { setProfile, setLoading, setError } from "../slices/userSlice"
+import { UserProfile } from "../../types/firestore"
 
 export const fetchUserProfile = createAsyncThunk(
 	"user/fetchProfile",
-	async (_, { dispatch }) => {
+	async (uid: string, { dispatch }) => {
 		try {
 			dispatch(setLoading(true))
-			const userId = auth.currentUser?.uid
-			if (!userId) throw new Error("No user logged in")
-
-			const userDoc = await getDoc(doc(db, "users", userId))
-			if (userDoc.exists()) {
-				dispatch(setProfile(userDoc.data() as UserProfile))
-			}
+			const profile = await userService.getProfile(uid)
+			dispatch(setProfile(profile))
+			return profile
 		} catch (error: any) {
 			dispatch(setError(error.message))
 			throw error
@@ -31,14 +23,15 @@ export const fetchUserProfile = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk(
 	"user/updateProfile",
-	async (profileData: Partial<UserProfile>, { dispatch }) => {
+	async (
+		{ uid, data }: { uid: string; data: Partial<UserProfile> },
+		{ dispatch }
+	) => {
 		try {
 			dispatch(setLoading(true))
-			const userId = auth.currentUser?.uid
-			if (!userId) throw new Error("No user logged in")
-
-			await updateDoc(doc(db, "users", userId), profileData)
-			dispatch(updateProfile(profileData))
+			await userService.updateProfile(uid, data)
+			dispatch(setProfile(data))
+			return data
 		} catch (error: any) {
 			dispatch(setError(error.message))
 			throw error
