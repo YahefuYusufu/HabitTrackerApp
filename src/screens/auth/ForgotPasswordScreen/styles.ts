@@ -1,5 +1,5 @@
 // src/screens/auth/ForgotPasswordScreen/styles.ts
-import { StyleSheet } from "react-native"
+import { Platform, StyleSheet } from "react-native"
 import { useCustomTheme } from "@hooks/useCustomTheme"
 
 export const useStyles = () => {
@@ -8,12 +8,12 @@ export const useStyles = () => {
 	return StyleSheet.create({
 		container: {
 			flex: 1,
-			backgroundColor: theme.colors.background,
+			paddingTop: Platform.OS === "ios" ? 80 : 40,
 		},
 		content: {
 			flex: 1,
-			padding: theme.spacing.md,
-			justifyContent: "center",
+			paddingHorizontal: theme.spacing.md,
+			paddingBottom: theme.spacing.xl,
 		},
 		title: {
 			fontSize: 32,
