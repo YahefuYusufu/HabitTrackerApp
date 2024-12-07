@@ -1,19 +1,13 @@
-// src/screens/auth/ForgotPasswordScreen/index.tsx
 import React, { useState } from "react"
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	KeyboardAvoidingView,
-	Platform,
-	Alert,
-} from "react-native"
+import { View, KeyboardAvoidingView, Platform, Alert } from "react-native"
+import { Text } from "react-native-paper"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AuthStackParamList } from "../../../types/navigation"
 import { ForgotPasswordForm } from "./components/ForgotPasswordForm"
-import { styles } from "./styles"
 import { ForgotPasswordFormData } from "../types"
 import Animated, { FadeIn, FadeOut, SlideInLeft } from "react-native-reanimated"
+import { useStyles } from "./styles"
+import { theme } from "@theme/index"
 
 type ForgotPasswordScreenProps = {
 	navigation: NativeStackNavigationProp<AuthStackParamList, "ForgotPassword">
@@ -22,12 +16,12 @@ type ForgotPasswordScreenProps = {
 export const ForgotPasswordScreen = ({
 	navigation,
 }: ForgotPasswordScreenProps) => {
+	const styles = useStyles()
 	const [isLoading, setIsLoading] = useState(false)
 
 	const handleResetPassword = async (data: ForgotPasswordFormData) => {
 		try {
 			setIsLoading(true)
-			// Simulate API call
 			await new Promise((resolve) => setTimeout(resolve, 2000))
 			console.log("Reset password for:", data.email)
 			Alert.alert(
@@ -56,8 +50,10 @@ export const ForgotPasswordScreen = ({
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={styles.container}>
 				<Animated.View entering={SlideInLeft.delay(300)} style={styles.content}>
-					<Text style={styles.title}>Reset Password</Text>
-					<Text style={styles.subtitle}>
+					<Text variant="headlineLarge" style={styles.title}>
+						Reset Password
+					</Text>
+					<Text variant="titleMedium" style={styles.subtitle}>
 						Enter your email to reset your password
 					</Text>
 
@@ -66,12 +62,14 @@ export const ForgotPasswordScreen = ({
 						isLoading={isLoading}
 					/>
 
-					<TouchableOpacity
-						onPress={() => navigation.navigate("Login")}
-						style={styles.backToLogin}
-						disabled={isLoading}>
-						<Text style={styles.backToLoginText}>Back to Login</Text>
-					</TouchableOpacity>
+					<View style={styles.backToLogin}>
+						<Text
+							variant="bodyMedium"
+							onPress={() => navigation.navigate("Login")}
+							style={{ color: theme.colors.primary }}>
+							Back to Login
+						</Text>
+					</View>
 				</Animated.View>
 			</KeyboardAvoidingView>
 		</Animated.View>

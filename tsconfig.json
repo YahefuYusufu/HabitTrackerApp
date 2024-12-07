@@ -6,7 +6,7 @@
 		"skipLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@app/*": ["src/app/*"],
+			"@navigator/*": ["src/navigator/*"],
 			"@components/*": ["src/components/*"],
 			"@constants/*": ["src/constants/*"],
 			"@hooks/*": ["src/hooks/*"],

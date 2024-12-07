@@ -1,16 +1,10 @@
 import React, { useState } from "react"
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	KeyboardAvoidingView,
-	Platform,
-	Alert,
-} from "react-native"
+import { View, KeyboardAvoidingView, Platform, Alert } from "react-native"
+import { Text } from "react-native-paper"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { AuthStackParamList } from "../../../types/navigation"
 import { LoginForm } from "./components/LoginForm"
-import { styles } from "./styles"
+import { useStyles } from "./styles"
 import { LoginFormData } from "@screens/auth/types"
 import Animated, { FadeIn, FadeOut, SlideInDown } from "react-native-reanimated"
 
@@ -19,15 +13,14 @@ type LoginScreenProps = {
 }
 
 export const LoginScreen = ({ navigation }: LoginScreenProps) => {
+	const styles = useStyles()
 	const [isLoading, setIsLoading] = useState(false)
 
 	const handleLogin = async (data: LoginFormData) => {
 		try {
 			setIsLoading(true)
-			// Simulate API call
 			await new Promise((resolve) => setTimeout(resolve, 2000))
 			console.log("Login data:", data)
-			// Handle successful login
 		} catch (error) {
 			Alert.alert(
 				"Error",
@@ -52,8 +45,12 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 				style={styles.container}>
 				<Animated.View entering={SlideInDown.delay(300)} style={styles.content}>
-					<Text style={styles.title}>Welcome Back!</Text>
-					<Text style={styles.subtitle}>Sign in to continue</Text>
+					<Text variant="headlineLarge" style={styles.title}>
+						Welcome Back!
+					</Text>
+					<Text variant="titleMedium" style={styles.subtitle}>
+						Sign in to continue
+					</Text>
 
 					<LoginForm
 						onSubmit={handleLogin}
@@ -62,10 +59,15 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
 					/>
 
 					<View style={styles.signupContainer}>
-						<Text style={styles.signupText}>Don't have an account? </Text>
-						<TouchableOpacity onPress={handleSignUp}>
-							<Text style={styles.signupLink}>Sign Up</Text>
-						</TouchableOpacity>
+						<Text variant="bodyMedium" style={styles.signupText}>
+							Don't have an account?{" "}
+						</Text>
+						<Text
+							variant="bodyMedium"
+							style={styles.signupLink}
+							onPress={handleSignUp}>
+							Sign Up
+						</Text>
 					</View>
 				</Animated.View>
 			</KeyboardAvoidingView>

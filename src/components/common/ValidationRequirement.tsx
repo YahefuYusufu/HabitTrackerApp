@@ -1,17 +1,14 @@
 import React from "react"
-import { Text } from "react-native"
+import { Text } from "react-native-paper"
 import Animated, {
-	FadeInDown,
-	FadeOutUp,
-	Layout,
 	useAnimatedStyle,
 	withSpring,
-	interpolateColor,
 	useSharedValue,
 	withTiming,
 	Easing,
 } from "react-native-reanimated"
-import { colors } from "theme"
+import { useCustomTheme } from "@hooks/useCustomTheme"
+import { View } from "react-native"
 
 type ValidationRequirementProps = {
 	text: string
@@ -24,6 +21,7 @@ export const ValidationRequirement = ({
 	isMet,
 	delay = 0,
 }: ValidationRequirementProps) => {
+	const theme = useCustomTheme()
 	const progress = useSharedValue(0)
 
 	React.useEffect(() => {
@@ -38,14 +36,8 @@ export const ValidationRequirement = ({
 	}, [isMet])
 
 	const animatedStyles = useAnimatedStyle(() => {
-		const color = interpolateColor(
-			progress.value,
-			[0, 1],
-			[colors.gray || "#94A3B8", colors.success || "#22C55E"]
-		)
-
 		return {
-			color,
+			color: isMet ? theme.colors.success : theme.colors.textSecondary,
 			transform: [
 				{ translateX: withSpring(progress.value * 3, { damping: 15 }) },
 				{ scale: withSpring(0.95 + progress.value * 0.05, { damping: 12 }) },
@@ -59,24 +51,34 @@ export const ValidationRequirement = ({
 				{
 					flexDirection: "row",
 					alignItems: "center",
-					marginHorizontal: 8,
-					marginVertical: 4,
+					paddingHorizontal: theme.spacing.sm,
+					paddingVertical: theme.spacing.xs,
 				},
+				animatedStyles,
 			]}>
-			<Animated.Text
-				style={[
-					{
-						fontSize: 14,
-						fontWeight: "400",
-						letterSpacing: 0.2,
-					},
-					animatedStyles,
-				]}>
-				<Text style={{ fontSize: 16, marginRight: 8 }}>
-					{isMet ? "😎" : "🥺"}
+			<View
+				style={{
+					width: 24,
+					alignItems: "center",
+					marginRight: theme.spacing.sm,
+				}}>
+				<Text
+					style={{
+						fontSize: 16,
+						opacity: isMet ? 1 : 0.6,
+						transform: [{ scale: isMet ? 1.1 : 0.9 }],
+					}}>
+					{isMet ? "😎" : "🤔"}
 				</Text>
+			</View>
+			<Text
+				style={{
+					fontSize: 14,
+					color: isMet ? theme.colors.success : theme.colors.textSecondary,
+					letterSpacing: 0.2,
+				}}>
 				{text}
-			</Animated.Text>
+			</Text>
 		</Animated.View>
 	)
 }

@@ -4,30 +4,28 @@ import Animated, {
 	FadeOutUp,
 	Layout,
 } from "react-native-reanimated"
-import { colors } from "theme"
+import { useCustomTheme } from "@hooks/useCustomTheme"
 
 type ValidationContainerProps = {
 	children: React.ReactNode
 }
 
-export const ValidationContainer = ({ children }: ValidationContainerProps) => (
-	<Animated.View
-		entering={FadeInDown.duration(400).springify()}
-		exiting={FadeOutUp.duration(300)}
-		layout={Layout.springify().damping(14)}
-		style={{
-			backgroundColor: colors.cardBackground || "#F8FAFC",
-			borderRadius: 12,
-			paddingVertical: 2,
-			shadowColor: "#000",
-			shadowOffset: {
-				width: 0,
-				height: 2,
-			},
-			shadowOpacity: 0.05,
-			shadowRadius: 3,
-			elevation: 2,
-		}}>
-		{children}
-	</Animated.View>
-)
+export const ValidationContainer = ({ children }: ValidationContainerProps) => {
+	const theme = useCustomTheme()
+
+	return (
+		<Animated.View
+			entering={FadeInDown.duration(400).springify()}
+			exiting={FadeOutUp.duration(300)}
+			layout={Layout.springify().damping(14)}
+			style={{
+				backgroundColor: theme.colors.surface,
+				borderRadius: theme.roundness,
+				paddingVertical: theme.spacing.xs,
+				marginTop: theme.spacing.xs,
+				...theme.elevation.level1,
+			}}>
+			{children}
+		</Animated.View>
+	)
+}

@@ -1,19 +1,13 @@
 import React, { useState } from "react"
-import {
-	View,
-	TextInput,
-	TouchableOpacity,
-	Text,
-	ActivityIndicator,
-} from "react-native"
+import { View } from "react-native"
+import { TextInput, Button } from "react-native-paper"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, LoginFormData } from "../../types"
-import { styles } from "../styles"
-import { colors } from "@theme/index"
 import { ValidationContainer } from "@components/common/ValidationContainer"
 import { ValidationRequirement } from "@components/common/ValidationRequirement"
 import { validateEmail, validatePassword } from "@utils/validation"
+import { useCustomTheme } from "@hooks/useCustomTheme"
 
 type LoginFormProps = {
 	onSubmit: (data: LoginFormData) => void
@@ -26,6 +20,7 @@ export const LoginForm = ({
 	onForgotPassword,
 	isLoading,
 }: LoginFormProps) => {
+	const theme = useCustomTheme()
 	const [showEmailRequirements, setShowEmailRequirements] = useState(false)
 	const [showPasswordRequirements, setShowPasswordRequirements] =
 		useState(false)
@@ -44,29 +39,31 @@ export const LoginForm = ({
 	const isPasswordValid = Object.values(passwordRequirements).every(Boolean)
 
 	return (
-		<View style={styles.form}>
+		<View style={{ gap: theme.spacing.md }}>
 			<Controller
 				control={control}
 				name="email"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Email"
-							style={[
-								styles.input,
-								isEmailValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
+							mode="outlined"
+							label="Email"
+							placeholder="Enter your email"
 							keyboardType="email-address"
 							autoCapitalize="none"
-							onChangeText={onChange}
 							value={value}
-							editable={!isLoading}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
 							onFocus={() => setShowEmailRequirements(true)}
 							onBlur={() => setShowEmailRequirements(false)}
+							right={
+								isEmailValid && value ? <TextInput.Icon icon="check" /> : null
+							}
+							outlineStyle={{
+								borderColor:
+									isEmailValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showEmailRequirements && (
 							<ValidationContainer>
@@ -89,24 +86,28 @@ export const LoginForm = ({
 			<Controller
 				control={control}
 				name="password"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Password"
-							style={[
-								styles.input,
-								isPasswordValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
+							mode="outlined"
+							label="Password"
+							placeholder="Enter your password"
 							secureTextEntry
-							onChangeText={onChange}
 							value={value}
-							editable={!isLoading}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
 							onFocus={() => setShowPasswordRequirements(true)}
 							onBlur={() => setShowPasswordRequirements(false)}
+							right={
+								isPasswordValid && value ? (
+									<TextInput.Icon icon="check" />
+								) : null
+							}
+							outlineStyle={{
+								borderColor:
+									isPasswordValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showPasswordRequirements && (
 							<ValidationContainer>
@@ -136,23 +137,21 @@ export const LoginForm = ({
 				)}
 			/>
 
-			<TouchableOpacity
+			<Button
+				mode="text"
 				onPress={onForgotPassword}
-				style={styles.forgotPassword}
-				disabled={isLoading}>
-				<Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-			</TouchableOpacity>
+				disabled={isLoading}
+				style={{ alignSelf: "flex-end" }}>
+				Forgot Password?
+			</Button>
 
-			<TouchableOpacity
-				style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+			<Button
+				mode="contained"
 				onPress={handleSubmit(onSubmit)}
-				disabled={isLoading}>
-				{isLoading ? (
-					<ActivityIndicator color="white" />
-				) : (
-					<Text style={styles.loginButtonText}>Login</Text>
-				)}
-			</TouchableOpacity>
+				disabled={isLoading}
+				loading={isLoading}>
+				Login
+			</Button>
 		</View>
 	)
 }

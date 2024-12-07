@@ -1,20 +1,13 @@
-// src/screens/auth/ForgotPasswordScreen/components/ForgotPasswordForm.tsx
 import React, { useState } from "react"
-import {
-	View,
-	TextInput,
-	TouchableOpacity,
-	Text,
-	ActivityIndicator,
-} from "react-native"
+import { View } from "react-native"
+import { TextInput, Button } from "react-native-paper"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { forgotPasswordSchema, ForgotPasswordFormData } from "../../types"
-import { styles } from "../styles"
-import { colors } from "theme"
-import { ValidationContainer } from "../../../../components/common/ValidationContainer"
-import { ValidationRequirement } from "../../../../components/common/ValidationRequirement"
-import { validateEmail } from "../../../../utils/validation"
+import { ValidationContainer } from "@components/common/ValidationContainer"
+import { ValidationRequirement } from "@components/common/ValidationRequirement"
+import { validateEmail } from "@utils/validation"
+import { useCustomTheme } from "@hooks/useCustomTheme"
 
 type ForgotPasswordFormProps = {
 	onSubmit: (data: ForgotPasswordFormData) => void
@@ -25,6 +18,7 @@ export const ForgotPasswordForm = ({
 	onSubmit,
 	isLoading,
 }: ForgotPasswordFormProps) => {
+	const theme = useCustomTheme()
 	const [showEmailRequirements, setShowEmailRequirements] = useState(false)
 
 	const { control, handleSubmit, watch } = useForm<ForgotPasswordFormData>({
@@ -36,29 +30,30 @@ export const ForgotPasswordForm = ({
 	const isEmailValid = Object.values(emailRequirements).every(Boolean)
 
 	return (
-		<View style={styles.form}>
+		<View style={{ gap: theme.spacing.md }}>
 			<Controller
 				control={control}
 				name="email"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Email"
-							style={[
-								styles.input,
-								isEmailValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
+							mode="outlined"
+							label="Email"
+							value={value}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
 							keyboardType="email-address"
 							autoCapitalize="none"
-							onChangeText={onChange}
-							value={value}
-							editable={!isLoading}
 							onFocus={() => setShowEmailRequirements(true)}
 							onBlur={() => setShowEmailRequirements(false)}
+							right={
+								isEmailValid && value ? <TextInput.Icon icon="check" /> : null
+							}
+							outlineStyle={{
+								borderColor:
+									isEmailValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showEmailRequirements && (
 							<ValidationContainer>
@@ -78,16 +73,14 @@ export const ForgotPasswordForm = ({
 				)}
 			/>
 
-			<TouchableOpacity
-				style={[styles.resetButton, isLoading && styles.buttonDisabled]}
+			<Button
+				mode="contained"
 				onPress={handleSubmit(onSubmit)}
-				disabled={isLoading}>
-				{isLoading ? (
-					<ActivityIndicator color="white" />
-				) : (
-					<Text style={styles.resetButtonText}>Send Reset Link</Text>
-				)}
-			</TouchableOpacity>
+				disabled={isLoading}
+				loading={isLoading}
+				style={{ marginTop: theme.spacing.md }}>
+				Send Reset Link
+			</Button>
 		</View>
 	)
 }

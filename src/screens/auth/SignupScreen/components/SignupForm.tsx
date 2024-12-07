@@ -1,16 +1,9 @@
 import React, { useState } from "react"
-import {
-	View,
-	TextInput,
-	TouchableOpacity,
-	Text,
-	ActivityIndicator,
-} from "react-native"
+import { View } from "react-native"
+import { TextInput, Button, useTheme } from "react-native-paper"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signupSchema, SignupFormData } from "../../types"
-import { styles } from "../styles"
-import { colors } from "@theme/index"
 import { ValidationContainer } from "@components/common/ValidationContainer"
 import { ValidationRequirement } from "@components/common/ValidationRequirement"
 import {
@@ -19,6 +12,7 @@ import {
 	validateFullName,
 	validateConfirmPassword,
 } from "@utils/validation"
+import { useCustomTheme } from "@hooks/useCustomTheme"
 
 type SignupFormProps = {
 	onSubmit: (data: SignupFormData) => void
@@ -26,6 +20,7 @@ type SignupFormProps = {
 }
 
 export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
+	const theme = useCustomTheme()
 	const [showFullNameRequirements, setShowFullNameRequirements] =
 		useState(false)
 	const [showEmailRequirements, setShowEmailRequirements] = useState(false)
@@ -33,6 +28,8 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 		useState(false)
 	const [showConfirmPasswordRequirements, setShowConfirmPasswordRequirements] =
 		useState(false)
+	const [showPassword, setShowPassword] = useState(false)
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
 	const { control, handleSubmit, watch } = useForm<SignupFormData>({
 		resolver: zodResolver(signupSchema),
@@ -59,28 +56,29 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 	).every(Boolean)
 
 	return (
-		<View style={styles.form}>
+		<View style={{ gap: theme.spacing.md }}>
 			<Controller
 				control={control}
 				name="fullName"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Full Name"
-							style={[
-								styles.input,
-								isNameValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
-							autoCapitalize="words"
-							onChangeText={onChange}
+							mode="outlined"
+							label="Full Name"
 							value={value}
-							editable={!isLoading}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
+							autoCapitalize="words"
 							onFocus={() => setShowFullNameRequirements(true)}
 							onBlur={() => setShowFullNameRequirements(false)}
+							right={
+								isNameValid && value ? <TextInput.Icon icon="check" /> : null
+							}
+							outlineStyle={{
+								borderColor:
+									isNameValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showFullNameRequirements && (
 							<ValidationContainer>
@@ -103,25 +101,26 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 			<Controller
 				control={control}
 				name="email"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Email"
-							style={[
-								styles.input,
-								isEmailValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
+							mode="outlined"
+							label="Email"
+							value={value}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
 							keyboardType="email-address"
 							autoCapitalize="none"
-							onChangeText={onChange}
-							value={value}
-							editable={!isLoading}
 							onFocus={() => setShowEmailRequirements(true)}
 							onBlur={() => setShowEmailRequirements(false)}
+							right={
+								isEmailValid && value ? <TextInput.Icon icon="check" /> : null
+							}
+							outlineStyle={{
+								borderColor:
+									isEmailValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showEmailRequirements && (
 							<ValidationContainer>
@@ -144,24 +143,28 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 			<Controller
 				control={control}
 				name="password"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Password"
-							style={[
-								styles.input,
-								isPasswordValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
-							secureTextEntry
-							onChangeText={onChange}
+							mode="outlined"
+							label="Password"
 							value={value}
-							editable={!isLoading}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
+							secureTextEntry={!showPassword}
 							onFocus={() => setShowPasswordRequirements(true)}
 							onBlur={() => setShowPasswordRequirements(false)}
+							right={
+								<TextInput.Icon
+									icon={showPassword ? "eye-off" : "eye"}
+									onPress={() => setShowPassword(!showPassword)}
+								/>
+							}
+							outlineStyle={{
+								borderColor:
+									isPasswordValid && value ? theme.colors.success : undefined,
+							}}
 						/>
 						{showPasswordRequirements && (
 							<ValidationContainer>
@@ -194,24 +197,30 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 			<Controller
 				control={control}
 				name="confirmPassword"
-				render={({ field: { onChange, value } }) => (
+				render={({ field: { onChange, value }, fieldState: { error } }) => (
 					<View>
 						<TextInput
-							placeholder="Confirm Password"
-							style={[
-								styles.input,
-								isConfirmPasswordValid &&
-									value && {
-										borderColor: colors.success || "#22C55E",
-										borderWidth: 1.5,
-									},
-							]}
-							secureTextEntry
-							onChangeText={onChange}
+							mode="outlined"
+							label="Confirm Password"
 							value={value}
-							editable={!isLoading}
+							onChangeText={onChange}
+							error={!!error}
+							disabled={isLoading}
+							secureTextEntry={!showConfirmPassword}
 							onFocus={() => setShowConfirmPasswordRequirements(true)}
 							onBlur={() => setShowConfirmPasswordRequirements(false)}
+							right={
+								<TextInput.Icon
+									icon={showConfirmPassword ? "eye-off" : "eye"}
+									onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+								/>
+							}
+							outlineStyle={{
+								borderColor:
+									isConfirmPasswordValid && value
+										? theme.colors.success
+										: undefined,
+							}}
 						/>
 						{showConfirmPasswordRequirements && (
 							<ValidationContainer>
@@ -226,16 +235,14 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 				)}
 			/>
 
-			<TouchableOpacity
-				style={[styles.signupButton, isLoading && styles.buttonDisabled]}
+			<Button
+				mode="contained"
 				onPress={handleSubmit(onSubmit)}
-				disabled={isLoading}>
-				{isLoading ? (
-					<ActivityIndicator color="white" />
-				) : (
-					<Text style={styles.signupButtonText}>Sign Up</Text>
-				)}
-			</TouchableOpacity>
+				disabled={isLoading}
+				loading={isLoading}
+				style={{ marginTop: theme.spacing.md }}>
+				Sign Up
+			</Button>
 		</View>
 	)
 }

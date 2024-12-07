@@ -1,19 +1,14 @@
-import { Dimensions, StyleSheet } from "react-native"
-import { spacing } from "../theme"
+import { useWindowDimensions } from "react-native"
 
-const { width, height } = Dimensions.get("window")
+export const useResponsive = () => {
+	const { width, height } = useWindowDimensions()
 
-export const isSmallDevice = width < 375
-export const screenWidth = width
-export const screenHeight = height
-
-// Usage in styles
-const styles = StyleSheet.create({
-	container: {
-		padding: isSmallDevice ? spacing.sm : spacing.md,
-	},
-	image: {
-		width: screenWidth * 0.8,
-		height: screenWidth * 0.8,
-	},
-})
+	return {
+		isSmallDevice: width < 375,
+		screenWidth: width,
+		screenHeight: height,
+		// Add more responsive helpers as needed
+		isLandscape: width > height,
+		scale: (size: number) => (width * size) / 375, // Scale based on screen width
+	}
+}
