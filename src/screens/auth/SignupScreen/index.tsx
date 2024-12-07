@@ -17,6 +17,7 @@ import Animated, {
 	FadeOut,
 	SlideInRight,
 } from "react-native-reanimated"
+import { firebaseAuth } from "@services/firebase/auth"
 
 type SignupScreenProps = {
 	navigation: NativeStackNavigationProp<AuthStackParamList, "Signup">
@@ -29,9 +30,10 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 	const handleSignup = async (data: SignupFormData) => {
 		try {
 			setIsLoading(true)
-			await new Promise((resolve) => setTimeout(resolve, 2000))
-			console.log("Signup data:", data)
-		} catch (error) {
+			await firebaseAuth.signUp(data.email, data.password)
+			Alert.alert("Success", "Account created successfully!")
+			navigation.navigate("Login")
+		} catch (error: any) {
 			Alert.alert(
 				"Error",
 				error instanceof Error ? error.message : "Failed to sign up"

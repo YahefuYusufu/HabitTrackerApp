@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { firebaseAuth } from "@services/firebase/auth"
 import { View, KeyboardAvoidingView, Platform, Alert } from "react-native"
 import { Text } from "react-native-paper"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
@@ -19,9 +20,9 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
 	const handleLogin = async (data: LoginFormData) => {
 		try {
 			setIsLoading(true)
-			await new Promise((resolve) => setTimeout(resolve, 2000))
-			console.log("Login data:", data)
-		} catch (error) {
+			await firebaseAuth.signIn(data.email, data.password)
+			// Successful login will be handled by auth state monitoring
+		} catch (error: any) {
 			Alert.alert(
 				"Error",
 				error instanceof Error ? error.message : "Failed to login"
