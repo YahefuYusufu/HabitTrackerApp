@@ -34,22 +34,30 @@ export const firebaseAuth = {
 			)
 
 			// Then create a user profile document in Firestore
-			const userRef = doc(db, "users", userCredential.user.uid)
-			await setDoc(
-				userRef,
-				{
-					email,
-					fullName,
-					createdAt: new Date().toISOString(),
-				},
-				{ merge: true }
-			)
+			try {
+				const userRef = doc(db, "users", userCredential.user.uid)
+				await setDoc(
+					userRef,
+					{
+						email,
+						fullName,
+						createdAt: new Date().toISOString(),
+					},
+					{ merge: true }
+				)
+			} catch (firestoreError) {
+				// If Firestore operation fails, but auth succeeded,
+				// still return success but log the error
+				console.warn("Firestore profile creation failed:", firestoreError)
+				// You might want to retry this operation later
+			}
 
 			return {
 				success: true,
 				user: userCredential.user,
 			}
 		} catch (error) {
+			console.error("Signup error:", error)
 			return {
 				success: false,
 				error:
@@ -70,6 +78,7 @@ export const firebaseAuth = {
 				user: userCredential.user,
 			}
 		} catch (error) {
+			console.error("Sign in error:", error)
 			return {
 				success: false,
 				error:

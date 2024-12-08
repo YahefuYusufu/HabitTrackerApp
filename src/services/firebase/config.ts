@@ -1,8 +1,13 @@
-// src/services/firebase/config.ts
 import { initializeApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
+import { initializeAuth, getReactNativePersistence } from "firebase/auth"
+import {
+	getFirestore,
+	initializeFirestore,
+	persistentLocalCache,
+	persistentSingleTabManager,
+} from "firebase/firestore"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Platform } from "react-native"
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDHRnyMOUU-1x4hORMc44qZCrqBgkyoJdM",
@@ -16,6 +21,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-// Just use getAuth() for now
-export const auth = getAuth(app)
-export const db = getFirestore(app)
+// Initialize Auth with AsyncStorage persistence
+const auth = initializeAuth(app, {
+	persistence: getReactNativePersistence(AsyncStorage),
+})
+
+// Initialize Firestore with persistence
+const db = initializeFirestore(app, {
+	localCache: persistentLocalCache({
+		tabManager: persistentSingleTabManager({
+			forceOwnership: true,
+		}),
+	}),
+	experimentalForceLongPolling: Platform.OS === "android",
+})
+
+export { auth, db }

@@ -31,6 +31,7 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 		if (isLoading) return
 
 		setIsLoading(true)
+
 		try {
 			const result = await firebaseAuth.signUp(
 				data.email,
@@ -39,9 +40,12 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 			)
 
 			if (result.success) {
-				// The onAuthStateChanged listener in Navigation will automatically
-				// redirect to the main app when authentication is successful
-				Alert.alert("Success", "Account created successfully!")
+				Alert.alert(
+					"Success",
+					"Account created successfully! You'll be redirected to the app.",
+					[{ text: "OK" }]
+				)
+				// No need to navigate manually - onAuthStateChanged will handle it
 			} else {
 				throw result.error
 			}
