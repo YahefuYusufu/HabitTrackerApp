@@ -28,16 +28,29 @@ export const SignupScreen = ({ navigation }: SignupScreenProps) => {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const handleSignup = async (data: SignupFormData) => {
+		if (isLoading) return
+
+		setIsLoading(true)
 		try {
-			setIsLoading(true)
-			await firebaseAuth.signUp(data.email, data.password, data.fullName)
-			Alert.alert("Success", "Account created successfully!", [
-				{ text: "OK", onPress: () => navigation.navigate("Login") },
-			])
-		} catch (error: unknown) {
+			const result = await firebaseAuth.signUp(
+				data.email,
+				data.password,
+				data.fullName
+			)
+
+			if (result.success) {
+				// The onAuthStateChanged listener in Navigation will automatically
+				// redirect to the main app when authentication is successful
+				Alert.alert("Success", "Account created successfully!")
+			} else {
+				throw result.error
+			}
+		} catch (error) {
 			const errorMessage =
-				error instanceof Error ? error.message : "An unknown error occurred"
-			Alert.alert("Error", errorMessage)
+				error instanceof Error
+					? error.message.replace("Firebase: ", "")
+					: "An unknown error occurred"
+			Alert.alert("Signup Failed", errorMessage)
 		} finally {
 			setIsLoading(false)
 		}

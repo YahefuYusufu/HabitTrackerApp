@@ -1,6 +1,6 @@
 export type RootStackParamList = {
 	Auth: undefined
-	TabNavigator: undefined
+	Main: undefined
 }
 
 export type AuthStackParamList = {

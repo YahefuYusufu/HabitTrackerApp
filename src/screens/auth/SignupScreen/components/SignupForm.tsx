@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { View } from "react-native"
-import { TextInput, Button, useTheme } from "react-native-paper"
+import { TextInput, Button } from "react-native-paper"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signupSchema, SignupFormData } from "../../types"
@@ -31,8 +31,14 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 	const [showPassword, setShowPassword] = useState(false)
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-	const { control, handleSubmit, watch } = useForm<SignupFormData>({
+	const {
+		control,
+		handleSubmit,
+		watch,
+		formState: { isValid },
+	} = useForm<SignupFormData>({
 		resolver: zodResolver(signupSchema),
+		mode: "onChange", // Validate on change
 	})
 
 	const watchName = watch("fullName", "")
@@ -55,6 +61,10 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 		confirmPasswordRequirements
 	).every(Boolean)
 
+	const handleFormSubmit = async (data: SignupFormData) => {
+		if (!isValid || isLoading) return
+		await onSubmit(data)
+	}
 	return (
 		<View style={{ gap: theme.spacing.md }}>
 			<Controller
@@ -240,8 +250,12 @@ export const SignupForm = ({ onSubmit, isLoading }: SignupFormProps) => {
 				onPress={handleSubmit(onSubmit)}
 				disabled={isLoading}
 				loading={isLoading}
-				style={{ marginTop: theme.spacing.md }}>
-				Sign Up
+				style={{
+					marginTop: theme.spacing.md,
+					backgroundColor: theme.colors.primary,
+				}}
+				contentStyle={{ height: 48 }}>
+				{isLoading ? "Creating Account..." : "Sign Up"}
 			</Button>
 		</View>
 	)

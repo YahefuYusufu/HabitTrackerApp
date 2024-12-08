@@ -21,8 +21,11 @@ export const LoginScreen = ({ navigation }: LoginScreenProps) => {
 		try {
 			setIsLoading(true)
 			await firebaseAuth.signIn(data.email, data.password)
-			// Successful login will be handled by auth state monitoring
-		} catch (error: any) {
+			navigation.getParent()?.reset({
+				index: 0,
+				routes: [{ name: "Main" }],
+			})
+		} catch (error) {
 			Alert.alert(
 				"Error",
 				error instanceof Error ? error.message : "Failed to login"
