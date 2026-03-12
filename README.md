@@ -9,7 +9,7 @@ A mobile application built with React Native (Expo) to help users track their da
 - 📊 Analytics and progress visualization
 - 🔔 Push notifications (coming soon)
 - 🎯 Streak tracking
-- 📱 Cross-platform (iOS & Android)
+-  Cross-platform (iOS & Android)
 
 ## Tech Stack
 
