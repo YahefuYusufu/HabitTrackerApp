@@ -8,7 +8,7 @@ A mobile application built with React Native (Expo) to help users track their da
 - ✅ Habit tracking with daily check-ins
 - 📊 Analytics and progress visualization
 - 🔔 Push notifications (coming soon)
-- 🎯 Streak tracking
+-  Streak tracking
 -  Cross-platform (iOS & Android)
 
 ## Tech Stack
