@@ -24,7 +24,7 @@ A mobile application built with React Native (Expo) to help users track their da
 ## Prerequisites
 
 - Node.js (v14 or newer)
-- npm or yarn
+- npm or yarn built
 - Expo CLI
 - iOS Simulator (Mac only) or Android Studio (optional)
 - Expo Go app on your physical device
