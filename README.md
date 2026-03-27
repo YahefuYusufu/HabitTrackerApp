@@ -55,7 +55,7 @@ src/
 
 ## Firebase Setup
 
-1. Create a Firebase project
+1. Create a Firebase project structure
 2. Enable Authentication and Firestore
 3. Add your Firebase configuration in `src/services/firebase/config.ts`
 
