@@ -1,6 +1,6 @@
 # Habit Tracker App
 
-A mobile application built with React Native (Expo) to help users track their daily habits and visualize their progress through analytics.
+A mobile application built with React Native (Expo) to help users track their daily habits and visualize their progress through analytics has done.
 
 ## Features
 
